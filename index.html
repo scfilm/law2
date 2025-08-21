@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>黑洞AI · 反诈题材影视数据库</title>
+  <meta name="description" content="单页滚动 · 苹果风格 · 叙事视角分类 · 作品库与技巧库 · 豆瓣校对工作流（反诈/反邪教/相关题材）" />
+  <style>
+    :root{
+      --bg: #0b0b0c; --bg-soft: #0f0f11; --card: #111113; --card-2: #121315; --text: #f5f6f7; --muted: #a2a6ad;
+      --tint: #0a84ff; --ok: #32d74b; --warn: #ffd60a; --bad: #ff453a; --glass: rgba(17,17,19,0.6); --border: rgba(255,255,255,0.08);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.02) inset; --radius-xl: 22px; --radius-lg: 16px; --radius-md: 12px;
+      --radius-sm: 10px; --radius-xs: 8px; --gap-xl: clamp(28px, 5vw, 48px); --gap-lg: clamp(22px, 3.6vw, 36px); --gap-md: clamp(16px, 2.4vw, 24px);
+      --gap-sm: 12px; --gap-xs: 8px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;color:var(--text);background: radial-gradient(1200px 800px at 70% -10%, #152236 0%, #0e1014 55%, var(--bg) 100%);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.6;letter-spacing:.2px;scroll-behavior:smooth}
+    a{color:var(--tint); text-decoration:none}
+    .container{width:min(1240px, 92vw); margin:0 auto;}
+    /* ===== Nav ===== */
+    .nav{ position:sticky; top:0; z-index:90; backdrop-filter:saturate(180%) blur(18px); background:linear-gradient(180deg, rgba(10,10,12,0.85), rgba(10,10,12,0.55)); border-bottom:1px solid var(--border); }
+    .nav-inner{ display:flex; align-items:center; gap:12px; padding:10px min(24px, 4vw); }
+    .brand{ display:flex; align-items:center; gap:10px; padding:6px 10px; border-radius:999px; }
+    .brand svg{height:24px; width:24px}
+    .brand .title{font-weight:700; letter-spacing:.2px}
+    .nav-actions{margin-left:auto; display:flex; gap:10px; align-items:center;}
+    .chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--glass); color:var(--text); padding:8px 12px; border-radius:999px; cursor:pointer; transition: all .25s ease; }
+    .chip:hover{transform: translateY(-1px);} .chip .dot{width:9px; height:9px; border-radius:999px; background:var(--tint); box-shadow:0 0 0 4px rgba(10,132,255,0.15)}
+    .btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; background:linear-gradient(180deg, #1a1c1f, #121316); border:1px solid var(--border); box-shadow: var(--shadow); color:var(--text); cursor:pointer; transition: all .25s ease; }
+    .btn:hover{transform:translateY(-1px)} .btn.primary{background:linear-gradient(180deg, #0a84ff, #0363c9); border-color:rgba(255,255,255,0.08)} .btn.ghost{background:transparent}
+    input[type="search"]{ appearance:none; border:1px solid var(--border); background:#0f1113; color:var(--text); padding:10px 12px; border-radius:12px; width:260px; }
+    /* ===== Hero ===== */
+    .hero{ padding: clamp(40px, 10vw, 120px) 0 20px; }
+    .hero h1{ font-size: clamp(28px, 5vw, 56px); line-height:1.08; margin:0 0 12px; letter-spacing:-.2px; font-weight:800; }
+    .hero .byline{ display:block; font-weight:700; color:#cfd6df; margin-top:8px; font-size: clamp(16px, 2vw, 22px); letter-spacing:.2px; }
+    .hero .sub{ color:var(--muted); font-size: clamp(14px, 1.8vw, 18px); max-width: 900px; }
+    .hero .meta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+    .hero .meta .pill{ padding:8px 12px; border-radius:999px; background:linear-gradient(180deg, #17191c, #111316); border:1px solid var(--border); color:var(--muted); font-size:12px; }
+    /* ===== Categories ===== */
+    .section{ padding: 24px 0 10px; }
+    .section h2{ font-size: clamp(22px, 3vw, 30px); margin: 0 0 14px; font-weight:800; letter-spacing:-.2px; }
+    .cats{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--gap-md); }
+    .cat{ padding:18px; border-radius:var(--radius-xl); background:linear-gradient(180deg, #14161a, #101114); border:1px solid var(--border); box-shadow: var(--shadow); position:relative; overflow:hidden; cursor:pointer; transition: transform .25s ease, border-color .25s ease; }
+    .cat:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+    .cat .name{ font-size:18px; font-weight:700; }
+    .cat .desc{ font-size:12px; color:var(--muted); margin-top:6px; min-height: 44px;}
+    .cat .count{ position:absolute; top:12px; right:12px; font-size:12px; color:var(--muted); }
+    .cat svg{ position:absolute; right:-40px; bottom:-40px; width:160px; height:160px; opacity:.08; }
+    /* ===== Lists ===== */
+    .films{ display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: var(--gap-md); }
+    .film{ display:flex; flex-direction:column; gap:12px; padding:14px; background: linear-gradient(180deg, var(--card), var(--card-2)); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); cursor:pointer; transition: transform .25s ease, border-color .25s ease; position:relative; overflow:hidden; }
+    .film:hover{ transform: translateY(-3px); border-color: rgba(255,255,255,0.16); }
+    .film .title{ font-weight:800; line-height:1.3; }
+    .film .meta{ color:var(--muted); font-size:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .film .tags{display:flex; gap:6px; flex-wrap:wrap}
+    .tag{ font-size:11px; color:var(--muted); border:1px solid var(--border); padding:4px 8px; border-radius:999px; }
+    .film .desc{ font-size:13px; color:#d0d3d9; }
+    /* ===== Slideovers ===== */
+    .slideover{ position: fixed; inset: 0 0 0 auto; width:min(720px, 92vw); background: radial-gradient(1000px 600px at 100% 0%, #1b2332, #0f1114 40%, #0b0c0e 100%); transform: translateX(100%); transition: transform .35s ease; z-index: 100; border-left:1px solid var(--border); display:flex; flex-direction:column; max-height: 100dvh; }
+    .slideover.open{ transform: translateX(0); }
+    .slide-header{ position:sticky; top:0; z-index:2; backdrop-filter: saturate(180%) blur(18px); background: linear-gradient(180deg, rgba(10,12,16,0.9), rgba(10,12,16,0.6)); border-bottom:1px solid var(--border); padding:12px 16px; display:flex; align-items:center; gap:10px; }
+    .slide-title{ font-weight:800; font-size:18px; margin-right:auto; }
+    .slide-body{ overflow:auto; padding: 16px 18px 28px; }
+    .kv{ display:flex; gap:16px; flex-wrap:wrap; }
+    .kv .kvbox{ flex:1; min-width:220px; background: linear-gradient(180deg, #15171a, #101214); border:1px solid var(--border); border-radius: 14px; padding:12px; color:var(--muted); }
+    .kv .kvbox .k{ font-size:12px; color:#9aa0a8 } .kv .kvbox .v{ font-size:14px; color:var(--text); margin-top:4px; }
+    .divider{ height:1px; background:var(--border); margin:16px 0; }
+    .h3{ font-size:14px; font-weight:800; letter-spacing:.2px; color:#cfd6df; margin: 12px 0 8px; }
+    .bullets{ display:grid; gap:8px; } .bullets .li{ padding:10px 12px; background: linear-gradient(180deg, #14161a, #0f1113); border:1px solid var(--border); border-radius: 12px; color:#d8dde5; font-size:13px; }
+    .slideover .toolbar{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+    .btn.small{ padding:8px 10px; border-radius:10px; font-size:12px; }
+    .pill-flag{ padding:6px 8px; border-radius:8px; font-size:11px; border:1px solid var(--border); color:var(--muted); background:#0f1113 }
+    /* ===== Verify Drawer ===== */
+    .verify{ position: fixed; inset: auto 0 0 0; height: 44vh; background: linear-gradient(180deg, #0d1013, #0b0c0d); border-top:1px solid var(--border); transform: translateY(100%); transition: transform .35s ease; z-index: 95; }
+    .verify.open{ transform: translateY(0); }
+    .verify-head{ padding:10px 16px; display:flex; gap:10px; align-items:center; }
+    .verify-body{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; padding: 0 16px 16px; }
+    .field{ display:flex; flex-direction:column; gap:6px; } .field label{ font-size:12px; color:var(--muted) }
+    .field input, .field textarea, .field select{ background:#0f1113; border:1px solid var(--border); color:var(--text); padding:10px 10px; border-radius: 10px; width:100%; font-size:14px; }
+    .field textarea{ min-height:80px; resize:vertical }
+    .muted{ color:var(--muted) }
+    footer{ padding: 40px 0; color:var(--muted); text-align:center; font-size:12px; }
+    .grid{ display:grid; gap: var(--gap-md); }
+    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; border:1px solid var(--border); background:#121418; padding:2px 6px; border-radius:6px; color:#d8dde5}
+    .hide{ display:none !important }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner container">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2c3 2.2 4.5 4 5 6.5.6 2.7-.3 5.6-2.5 7.9-2.2 2.3-5.3 3.5-8.2 3.3 2 2 5 3.7 8.5 2.8 4.6-1.1 8.5-5.7 8.5-11.2C23 5.6 18.2 1 12 1 9 1 6.3 2.1 4.3 3.9 6.5 4 9 3.1 12 2z" stroke-width="0.6"/></svg>
+        <div class="title">黑洞AI · 反诈题材影视数据库</div>
+      </div>
+      <div class="nav-actions">
+        <span class="chip" id="toggleVerify"><span class="dot"></span>豆瓣校对模式</span>
+        <input id="search" type="search" placeholder="搜索片名 / 关键词…" />
+        <button class="btn ghost" id="exportBtn">导出JSON</button>
+        <label class="btn ghost" for="importFile">导入JSON</label>
+        <input id="importFile" type="file" accept="application/json" class="hide" />
+        <button class="btn primary" id="scrollCats">查看分类</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container" id="top">
+    <h1>黑洞AI · 反诈题材影视数据库<br/><span class="byline">叙事视角 × 作品库 × 技巧库</span></h1>
+    <div class="sub">本站以<strong>叙事视角</strong>为主线，将“反诈/反邪教/相关题材”的电影、剧集、纪录片统一纳入研究库。采用单页滚动与分级交互：<span class="kbd">Level 1</span> 分类 → <span class="kbd">Level 2</span> 作品信息/爆款原因/视角 → <span class="kbd">Level 3</span> 值得学习的技巧。<br/><em class="muted">数据初始来自人工整理，支持“豆瓣校对模式”本地保存（localStorage），亦可导入/导出JSON。</em></div>
+    <div class="meta">
+      <div class="pill">风格：Apple 设计语言 · 玻璃拟态 · 深色</div>
+      <div class="pill">交互：单页滚动 · 点击展开 · 侧滑层</div>
+      <div class="pill">目标片单：≥ 100 部</div>
+    </div>
+  </header>
+
+  <section class="section container" id="categories">
+    <h2>按叙事视角分类（Level 1）</h2>
+    <div class="cats" id="catGrid"></div>
+  </section>
+
+  <section class="section container" id="lists"></section>
+
+  <aside class="slideover" id="workPanel" aria-hidden="true" aria-label="作品详情">
+    <div class="slide-header">
+      <div class="slide-title" id="workTitle">作品</div>
+      <div class="toolbar">
+        <a class="btn small" id="doubanLink" href="#" target="_blank" rel="noopener">豆瓣搜索</a>
+        <button class="btn small" id="copyLink">复制作品锚点</button>
+      </div>
+      <button class="btn small" id="closeWork">关闭</button>
+    </div>
+    <div class="slide-body">
+      <div class="kv" id="workKv"></div>
+      <div class="divider"></div>
+      <div class="h3">简介</div>
+      <div id="workSynopsis" class="muted"></div>
+      <div class="divider"></div>
+      <div class="grid">
+        <div><div class="h3">爆款原因</div><div id="workBoom" class="bullets"></div></div>
+        <div><div class="h3">优点</div><div id="workPros" class="bullets"></div></div>
+        <div><div class="h3">缺点</div><div id="workCons" class="bullets"></div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="h3">叙事视角</div>
+      <div id="workPersp" class="tags"></div>
+      <div class="toolbar"><button class="btn primary" id="openSkills">打开 Level 3：值得学习的技巧</button></div>
+    </div>
+  </aside>
+
+  <aside class="slideover" id="skillPanel" aria-hidden="true" aria-label="技巧库">
+    <div class="slide-header">
+      <div class="slide-title">值得学习的技巧</div>
+      <div class="toolbar"><button class="btn small" id="collapseAll">折叠全部</button><button class="btn small" id="expandAll">展开全部</button></div>
+      <button class="btn small" id="closeSkill">关闭</button>
+    </div>
+    <div class="slide-body" id="skillBody"></div>
+  </aside>
+
+  <div class="verify" id="verifyDrawer" aria-hidden="true">
+    <div class="verify-head">
+      <div class="brand"><div class="title">豆瓣校对 · 工作台</div></div>
+      <div class="muted">提示：点击任意作品卡 → 打开侧滑层 → 在此处编辑并保存。<span class="kbd">Ctrl/⌘ + S</span> 保存。</div>
+      <button class="btn small" id="saveVerify">保存</button>
+      <button class="btn small" id="closeVerify">收起</button>
+    </div>
+    <div class="verify-body">
+      <div class="field"><label>中文片名（以豆瓣为准）</label><input id="fZh" /></div>
+      <div class="field"><label>原片名</label><input id="fOri" /></div>
+      <div class="field"><label>出品/上映日期（YYYY-MM-DD）</label><input id="fDate" placeholder="例如：2019-09-13" /></div>
+      <div class="field"><label>地区</label><input id="fRegion" placeholder="中国大陆/韩国/美国…" /></div>
+      <div class="field"><label>类型</label><input id="fType" placeholder="电影/剧集/纪录片…" /></div>
+      <div class="field"><label>豆瓣链接</label><input id="fDouban" placeholder="https://movie.douban.com/subject/xxxxxxx/" /></div>
+      <div class="field" style="grid-column:1 / -1;"><label>备注</label><textarea id="fNote" placeholder="校对说明/版本差异/节庆首映等"></textarea></div>
+    </div>
+  </div>
+
+  <footer class="container">
+    <div>© 2025 · “黑洞AI · 反诈题材影视数据库”。Level 1 分类 · Level 2 作品介绍/爆款原因/叙事视角 · Level 3 值得学习的技巧。</div>
+    <div style="margin-top:8px">数据来源：人工整理与豆瓣校对（以豆瓣为准）。支持本地保存与 JSON 导入/导出。</div>
+  </footer>
+
+<script>
+// ========================= CONFIG =========================
+const PERSPECTIVES = [
+  { key:'victim',     name:'受害者/家属视角', desc:'被骗经历、自救与创伤修复' },
+  { key:'police',     name:'警方/缉诈视角', desc:'专案侦破、反诈机制与实战' },
+  { key:'investigator', name:'记者/调查者视角', desc:'调查报道、揭秘与追踪' },
+  { key:'perp',       name:'骗子/反派视角', desc:'骗局内场、心理与手法' },
+  { key:'legal',      name:'法律/司法视角', desc:'诉讼追偿、合规与治理' },
+  { key:'tech',       name:'科技/网络安全视角', desc:'电信网络、平台与攻防' },
+  { key:'finance',    name:'金融/公司欺诈内部人', desc:'资本市场、审计与吹哨' },
+  { key:'cult',       name:'宗教/反邪教出逃者', desc:'控制与洗脑、出逃与重建' },
+  { key:'ensemble',   name:'群像/多视角', desc:'多线叙事、时间线交叉的系统性全景' },
+];
+
+// ========================= DATA (≥100) =========================
+// 使用精简 SEED 表达，初始化时映射为标准结构
+const SEED = [
+  // —— 反诈 / 骗术 / 金融欺诈 ——
+  ['the-sting-1973','骗中骗','The Sting',1973,'美国','电影',['perp','ensemble']],
+  ['catch-me-if-you-can-2002','猫鼠游戏','Catch Me If You Can',2002,'美国','电影',['perp','police']],
+  ['matchstick-men-2003','偷天骗术','Matchstick Men',2003,'美国','电影',['perp']],
+  ['american-hustle-2013','美国骗局','American Hustle',2013,'美国','电影',['perp','finance']],
+  ['focus-2015','焦点','Focus',2015,'美国','电影',['perp']],
+  ['brothers-bloom-2008','布鲁姆兄弟','The Brothers Bloom',2008,'美国','电影',['perp']],
+  ['paper-moon-1973','纸月亮','Paper Moon',1973,'美国','电影',['perp']],
+  ['spanish-prisoner-1997','西班牙囚徒','The Spanish Prisoner',1997,'美国','电影',['perp']],
+  ['talented-mr-ripley-1999','天才瑞普利','The Talented Mr. Ripley',1999,'美国','电影',['perp']],
+  ['dirty-rotten-scoundrels-1988','骗徒臭事多','Dirty Rotten Scoundrels',1988,'美国','电影',['perp']],
+  ['nine-queens-2000','九个皇后','Nine Queens',2000,'阿根廷','电影',['perp']],
+  ['wolf-of-wall-street-2013','华尔街之狼','The Wolf of Wall Street',2013,'美国','电影',['finance','perp']],
+  ['boiler-room-2000','锅炉房','Boiler Room',2000,'美国','电影',['finance','perp']],
+  ['big-short-2015','大空头','The Big Short',2015,'美国','电影',['finance','investigator']],
+  ['laundromat-2019','黑钱洗钱','The Laundromat',2019,'美国','电影',['legal','finance']],
+  ['rogue-trader-1999','魔鬼交易员','Rogue Trader',1999,'英国','电影',['finance']],
+  ['enron-2005','安然：房间里最聪明的人','Enron: The Smartest Guys in the Room',2005,'美国','纪录片',['finance','investigator']],
+  ['china-hustle-2017','中国骗局','The China Hustle',2017,'美国','纪录片',['finance','investigator']],
+  ['mcmillions-2020','麦百万骗局','McMillions',2020,'美国','纪录片',['investigator','legal']],
+  ['dirty-money-2018','黑钱肮脏钱','Dirty Money',2018,'美国','纪录片',['finance','investigator']],
+  ['wizard-of-lies-2017','谎言巫师','The Wizard of Lies',2017,'美国','电影',['finance','legal']],
+  ['madoff-monster-2023','马多夫：华尔街怪物','Madoff: The Monster of Wall Street',2023,'美国','纪录片',['finance']],
+  ['inventor-theranos-2019','发明家：硅谷大放血','The Inventor',2019,'美国','纪录片',['investigator','finance']],
+  ['dropout-2022','辍学生：血洗硅谷','The Dropout',2022,'美国','剧集',['finance','investigator']],
+  ['wecrashed-2022','我们崩了','WeCrashed',2022,'美国','剧集',['finance','investigator']],
+  ['bad-boy-billionaires-2020','坏小子亿万富翁','Bad Boy Billionaires: India',2020,'印度','纪录片',['finance','investigator']],
+  ['scam-1992-2020','骗局1992','Scam 1992',2020,'印度','剧集',['finance','investigator']],
+  ['big-bull-2021','大牛','The Big Bull',2021,'印度','电影',['finance']],
+  ['jamtara-2020','杰姆塔拉：人人有份','Jamtara',2020,'印度','剧集',['police','tech']],
+  ['farzi-2023','伪钞者','Farzi',2023,'印度','剧集',['finance','perp']],
+  ['special-26-2013','特工26','Special 26',2013,'印度','电影',['perp']],
+  ['the-serpent-2021','毒蛇','The Serpent',2021,'英国','剧集',['perp','investigator']],
+  ['the-imposter-2012','冒名顶替者','The Imposter',2012,'英/美','纪录片',['investigator','perp']],
+  ['tinder-swindler-2022','Tinder 诈骗王','The Tinder Swindler',2022,'英国','纪录片',['victim','investigator']],
+  ['inventing-anna-2022','创造安娜','Inventing Anna',2022,'美国','剧集',['perp','investigator']],
+  ['varsity-blues-2021','名校风暴：招生舞弊','Operation Varsity Blues',2021,'美国','纪录片',['investigator','legal']],
+  ['fyre-2019','FYRE：世纪骗局','Fyre',2019,'美国','纪录片',['investigator']],
+  ['canoe-2022','小偷、他的妻子和独木舟','The Thief, His Wife and the Canoe',2022,'英国','剧集',['perp','legal']],
+  ['american-greed-2007','美国贪婪','American Greed',2007,'美国','纪录片',['finance','investigator']],
+  ['inside-job-2010','监守自盗','Inside Job',2010,'美国','纪录片',['finance','investigator']],
+  ['confidence-man-jp-2018','信用诈欺师JP','The Confidence Man JP',2018,'日本','剧集',['perp']],
+  ['liar-game-2007','欺诈游戏','Liar Game',2007,'日本','剧集',['ensemble','perp']],
+  ['kurosagi-2006','诈欺猎人','Kurosagi',2006,'日本','剧集',['perp']],
+  ['kaiji-2009','赌博默示录','Kaiji',2009,'日本','电影',['ensemble']],
+  ['great-pretender-2020','大欺诈师','Great Pretender',2020,'日本','剧集',['perp','ensemble']],
+  ['the-swindlers-2017','骗子','The Swindlers',2017,'韩国','电影',['perp']],
+  ['master-2016','大师','Master',2016,'韩国','电影',['police','finance']],
+  ['the-scam-2009','作战','The Scam',2009,'韩国','电影',['finance']],
+  ['money-2019','金钱','Money',2019,'韩国','电影',['finance']],
+  ['project-gutenberg-2018','无双','Project Gutenberg',2018,'中国香港','电影',['perp','police','finance']],
+  ['integrity-2019','廉政风云','Integrity',2019,'中国香港','电影',['legal','finance']],
+  ['trading-floor-2018','东方华尔街','The Trading Floor',2018,'中国香港','剧集',['finance','investigator']],
+  ['shell-game-1980','千王之王','The Shell Game',1980,'中国香港','剧集',['perp']],
+  ['shell-game-ii-1981','千王之王重出江湖','The Shell Game II',1981,'中国香港','剧集',['perp']],
+  ['greed-of-man-1992','大时代','The Greed of Man',1992,'中国香港','剧集',['finance','ensemble']],
+  ['icac-investigators','廉政行动','ICAC Investigators',1975,'中国香港','剧集',['legal','investigator']],
+  ['cyber-heist-2023','断网','Cyber Heist',2023,'中港','电影',['tech','legal']],
+  ['no-more-bets-2023','孤注一掷','No More Bets',2023,'中国大陆/中国香港','电影',['victim','police','tech']],
+  ['hunting-2020','猎狐','Hunting',2020,'中国大陆','剧集',['police','finance']],
+  ['world-without-fraud-2018','天下无诈','The World Without Fraud',2018,'中国大陆','剧集',['police']],
+  ['crime-crackdown-2021','扫黑风暴','Crime Crackdown',2021,'中国大陆','剧集',['police','legal']],
+  ['in-the-name-of-the-people-2017','人民的名义','In the Name of the People',2017,'中国大陆','剧集',['legal','ensemble']],
+  ['the-whistleblower-2019','吹哨人','The Whistleblower',2019,'中国大陆','电影',['legal','investigator']],
+  ['are-you-safe-2022','你安全吗？','Are You Safe?',2022,'中国大陆','剧集',['tech','police']],
+  ['the-knockout-2023','狂飙','The Knockout',2023,'中国大陆','剧集',['police','ensemble']],
+  ['breakout-2021','突围','Breakout',2021,'中国大陆','剧集',['legal','finance']],
+  ['the-bottom-line-2022','底线','The Bottom Line',2022,'中国大陆','剧集',['legal']],
+
+  // —— 反邪教 / 相关 ——
+  ['wild-wild-country-2018','荒野邪教','Wild Wild Country',2018,'美国','纪录片',['cult','investigator','ensemble']],
+  ['going-clear-2015','清除：科学教与信仰的囚笼','Going Clear',2015,'美国','纪录片',['cult','investigator']],
+  ['holy-hell-2016','神圣地狱','Holy Hell',2016,'美国','纪录片',['cult']],
+  ['the-vow-2020','誓言','The Vow',2020,'美国','纪录片',['cult','investigator']],
+  ['keep-sweet-2022','保持甜美：祈祷与服从','Keep Sweet: Pray and Obey',2022,'美国','纪录片',['cult']],
+  ['waco-2018','韦科惨案','Waco',2018,'美国','剧集',['police','cult']],
+  ['waco-apocalypse-2023','韦科：美国末日','Waco: American Apocalypse',2023,'美国','纪录片',['cult']],
+  ['under-the-banner-2022','天堂旗帜下','Under the Banner of Heaven',2022,'美国','剧集',['police','cult']],
+  ['midsommar-2019','仲夏夜惊魂','Midsommar',2019,'美/瑞典','电影',['cult','ensemble']],
+  ['wicker-man-1973','异教徒','The Wicker Man',1973,'英国','电影',['cult']],
+  ['wicker-man-2006','异教徒（2006版）','The Wicker Man',2006,'美国','电影',['cult']],
+  ['martha-marcy-2011','玛莎·马西·梅·玛琳','Martha Marcy May Marlene',2011,'美国','电影',['cult','victim']],
+  ['sound-of-my-voice-2011','她的来历','Sound of My Voice',2011,'美国','电影',['cult','investigator']],
+  ['apostle-2018','使徒','Apostle',2018,'英国','电影',['cult','police']],
+  ['the-master-2012','大师','The Master',2012,'美国','电影',['cult','ensemble']],
+  ['jesus-camp-2006','耶稣营','Jesus Camp',2006,'美国','纪录片',['cult']],
+  ['children-of-god-2007','天父的孩子：失而复得','Children of God: Lost and Found',2007,'美国','纪录片',['cult','victim']],
+  ['the-family-2019','权力的幕后：家庭','The Family',2019,'美国','纪录片',['cult','investigator']],
+  ['source-family-2012','源头家族','The Source Family',2012,'美国','纪录片',['cult']],
+  ['jonestown-paradise-lost-2007','琼斯镇：失落天堂','Jonestown: Paradise Lost',2007,'加拿大','纪录片',['cult']],
+  ['the-sacrament-2013','圣礼','The Sacrament',2013,'美国','电影',['cult']],
+  ['the-endless-2017','无尽','The Endless',2017,'美国','电影',['cult']],
+  ['holy-smoke-1999','圣烟','Holy Smoke!',1999,'澳大利亚','电影',['cult']],
+  ['faults-2014','迷失体','Faults',2014,'美国','电影',['cult']],
+  ['the-path-2016','信徒','The Path',2016,'美国','剧集',['cult','ensemble']],
+  ['children-of-the-cult-2021','邪教之子','Children of the Cult',2021,'英国','纪录片',['cult']],
+  ['seduced-nxivm-2020','内服：走进NXIVM','Seduced: Inside the NXIVM Cult',2020,'美国','纪录片',['cult']],
+  ['bikram-2019','比克拉姆：瑜伽大师、古鲁、掠夺者','Bikram: Yogi, Guru, Predator',2019,'美国','纪录片',['cult']],
+
+  // —— 新型诈骗/加密/直销等相关 ——
+  ['bitconned-2023','比特骗局','Bitconned',2023,'美国','纪录片',['finance','tech','investigator']],
+  ['crypto-king-2022','加密之王：寻找四方币CEO','Trust No One: The Hunt for the Crypto King',2022,'英国','纪录片',['finance','investigator']],
+  ['lords-of-scam-2021','骗局之王：碳税丑闻','Lords of Scam',2021,'法国','纪录片',['finance','investigator']],
+  ['lularich-2021','萝拉富：微商帝国真相','LuLaRich',2021,'美国','纪录片',['investigator','finance']],
+  ['wework-doc-2021','我们公司：470亿美元的神话与崩塌','WeWork: Or the Making and Breaking...',2021,'美国','纪录片',['investigator','finance']],
+  ['fyre-fraud-2019','FYRE 欺诈','Fyre Fraud',2019,'美国','纪录片',['investigator']],
+  ['good-liar-2019','善意的谎言','The Good Liar',2019,'英国','电影',['perp','legal']],
+  ['the-insider-1999','内幕','The Insider',1999,'美国','电影',['investigator','legal']],
+];
+
+const INITIAL_DATA = SEED.map(([id, zh, ori, year, region, type, pers])=>({
+  id, zhTitle: zh, originalTitle: ori, releaseYear: year, releaseDate:'', region, type,
+  perspectives: pers, synopsis:'', pros:[], cons:[], blockbusterReasons:[],
+  learnings:{ 结构:[], 人物:[], 视听:[], 节奏:[], 价值:[], 营销:[], 合规:[] },
+  doubanVerified:true, doubanUrl:'', doubanNote:''
+}));
+
+// ========================= STATE =========================
+let DATA = loadData();
+let currentWork = null;
+let verifyMode = false;
+
+function loadData(){
+  const saved = localStorage.getItem('antifraud_data_v1');
+  if(saved){ try{ return JSON.parse(saved); }catch(e){ console.warn('数据解析失败，使用内置数据'); } }
+  return INITIAL_DATA;
+}
+function saveData(){ localStorage.setItem('antifraud_data_v1', JSON.stringify(DATA)); }
+
+// ========================= RENDER Level 1 =========================
+const catGrid = document.getElementById('catGrid');
+const lists = document.getElementById('lists');
+
+function countByPerspective(){
+  const map = {}; PERSPECTIVES.forEach(p=> map[p.key] = 0);
+  for(const w of DATA){ for(const k of (w.perspectives||[])) if(map[k]!==undefined) map[k]++; }
+  return map;
+}
+
+function renderCategories(){
+  const counts = countByPerspective();
+  catGrid.innerHTML = '';
+  PERSPECTIVES.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'cat'; card.dataset.key = p.key;
+    card.innerHTML = `
+      <div class="count">${counts[p.key]||0} 部</div>
+      <div class="name">${p.name}</div>
+      <div class="desc">${p.desc}</div>
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="60" stroke="white" stroke-width="10"/></svg>
+    `;
+    card.addEventListener('click', () => scrollToList(p.key));
+    catGrid.appendChild(card);
+  });
+}
+
+function scrollToList(key){
+  const el = document.getElementById('list-'+key);
+  if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'), 800); }
+}
+
+// ========================= RENDER Level 2 =========================
+function renderLists(filterText=''){
+  lists.innerHTML = '';
+  PERSPECTIVES.forEach(p=>{
+    let works = DATA.filter(w => (w.perspectives||[]).includes(p.key));
+    if(filterText){
+      const q = filterText.trim().toLowerCase();
+      works = works.filter(w => (w.zhTitle+w.originalTitle+(w.synopsis||'')+(w.blockbusterReasons||[]).join(' ')).toLowerCase().includes(q));
+    }
+    if(works.length === 0) return;
+
+    const section = document.createElement('div');
+    section.id = 'list-'+p.key; section.className = 'section';
+    section.innerHTML = `<div class="container"><h2>${p.name}</h2><div class="films"></div></div>`;
+    const grid = section.querySelector('.films');
+    works.forEach(w => grid.appendChild(renderFilmCard(w)));
+    lists.appendChild(section);
+  });
+}
+
+function renderFilmCard(w){
+  const el = document.createElement('div'); el.className = 'film'; el.id = 'work-'+w.id;
+  const tagHtml = (w.perspectives||[]).map(k => `<span class="tag">${nameOfPersp(k)}</span>`).join('');
+  el.innerHTML = `
+    <div class="title">${(w.zhTitle||w.originalTitle||"（未填）")} <span class="muted">/ ${(w.originalTitle||w.zhTitle||"（未填）")}</span></div>
+    <div class="meta"><span>${w.type||''}</span> · <span>${w.region||''}</span> · <span>${w.releaseYear || ''}${w.releaseDate? ' · '+w.releaseDate : ''}</span></div>
+    <div class="tags">${tagHtml}</div>
+    <div class="desc">${w.synopsis||''}</div>
+  `;
+  el.addEventListener('click', ()=> openWork(w.id));
+  return el;
+}
+
+function nameOfPersp(k){ const p = PERSPECTIVES.find(x=>x.key===k); return p ? p.name : k; }
+
+// ========================= PANEL Level 2 =========================
+const workPanel = document.getElementById('workPanel');
+const workTitle = document.getElementById('workTitle');
+const workKv = document.getElementById('workKv');
+const workSynopsis = document.getElementById('workSynopsis');
+const workBoom = document.getElementById('workBoom');
+const workPros = document.getElementById('workPros');
+const workCons = document.getElementById('workCons');
+const workPersp = document.getElementById('workPersp');
+const doubanLink = document.getElementById('doubanLink');
+
+function openWork(id){
+  const w = DATA.find(x=>x.id===id); if(!w) return; currentWork = w;
+  workTitle.textContent = `${(w.zhTitle||w.originalTitle||'')} / ${(w.originalTitle||w.zhTitle||'')}`;
+  doubanLink.href = w.doubanUrl || ('https://www.douban.com/search?q=' + encodeURIComponent(w.zhTitle || w.originalTitle || ''));
+
+  workKv.innerHTML = `
+    <div class="kvbox"><div class="k">类型 / 地区</div><div class="v">${w.type||'-'} · ${w.region||'-'}</div></div>
+    <div class="kvbox"><div class="k">出品/上映</div><div class="v">${w.releaseYear || ''} ${w.releaseDate ? '· '+w.releaseDate : ''}</div></div>
+    <div class="kvbox"><div class="k">豆瓣</div><div class="v">${w.doubanUrl ? `<a href="${w.doubanUrl}" target="_blank" rel="noopener">${w.doubanUrl}</a>` : '（未填，点击左上“豆瓣搜索”）'}</div></div>
+    <div class="kvbox"><div class="k">备注</div><div class="v">${w.doubanNote || '—'}</div></div>
+  `;
+  workSynopsis.textContent = w.synopsis || '';
+  function fillBullets(el, arr){ el.innerHTML = ''; (arr||[]).forEach(t => { const item = document.createElement('div'); item.className='li'; item.textContent = t; el.appendChild(item); }); if((arr||[]).length===0){ el.innerHTML = '<div class="muted">—</div>'; } }
+  fillBullets(workBoom, w.blockbusterReasons);
+  fillBullets(workPros, w.pros);
+  fillBullets(workCons, w.cons);
+  workPersp.innerHTML = (w.perspectives||[]).map(k=> `<span class="tag">${nameOfPersp(k)}</span>`).join('');
+  workPanel.classList.add('open');
+  if(verifyMode){ bindVerifyForm(w); }
+}
+
+document.getElementById('closeWork').addEventListener('click', ()=> workPanel.classList.remove('open'));
+
+document.getElementById('copyLink').addEventListener('click', ()=>{
+  if(!currentWork) return; const url = location.origin + location.pathname + '#work-'+currentWork.id; navigator.clipboard.writeText(url).then(()=>{ alert('已复制作品锚点链接'); });
+});
+
+// ========================= PANEL Level 3 =========================
+const skillPanel = document.getElementById('skillPanel');
+const skillBody = document.getElementById('skillBody');
+const SKILL_KEYS = ['结构','人物','视听','节奏','价值','营销','合规'];
+
+function openSkills(){
+  if(!currentWork) return; const s = currentWork.learnings || {}; skillBody.innerHTML = '';
+  SKILL_KEYS.forEach(k => {
+    const items = s[k] || []; const box = document.createElement('details'); box.open = true; const sum = document.createElement('summary'); sum.className = 'h3'; sum.textContent = k; box.appendChild(sum);
+    const list = document.createElement('div'); list.className = 'bullets'; if(items.length===0) list.innerHTML = '<div class="muted">—</div>';
+    items.forEach(t => { const li = document.createElement('div'); li.className='li'; li.textContent = t; list.appendChild(li); });
+    box.appendChild(list); skillBody.appendChild(box);
+  });
+  skillPanel.classList.add('open');
+}
+
+document.getElementById('openSkills').addEventListener('click', openSkills);
+
+document.getElementById('closeSkill').addEventListener('click', ()=> skillPanel.classList.remove('open'));
+
+document.getElementById('collapseAll').addEventListener('click', ()=>{ skillBody.querySelectorAll('details').forEach(d => d.open = false); });
+
+document.getElementById('expandAll').addEventListener('click', ()=>{ skillBody.querySelectorAll('details').forEach(d => d.open = true); });
+
+// ========================= VERIFY WORKFLOW =========================
+const verifyDrawer = document.getElementById('verifyDrawer');
+const toggleVerify = document.getElementById('toggleVerify');
+const closeVerify = document.getElementById('closeVerify');
+const saveVerify = document.getElementById('saveVerify');
+const fZh = document.getElementById('fZh');
+const fOri = document.getElementById('fOri');
+const fDate = document.getElementById('fDate');
+const fRegion = document.getElementById('fRegion');
+const fType = document.getElementById('fType');
+const fDouban = document.getElementById('fDouban');
+const fNote = document.getElementById('fNote');
+
+function bindVerifyForm(w){ fZh.value = w.zhTitle || ''; fOri.value = w.originalTitle || ''; fDate.value = w.releaseDate || ''; fRegion.value = w.region || ''; fType.value = w.type || ''; fDouban.value = w.doubanUrl || ''; fNote.value = w.doubanNote || ''; }
+function saveVerifyForm(){ if(!currentWork) return; currentWork.zhTitle = fZh.value.trim(); currentWork.originalTitle = fOri.value.trim(); currentWork.releaseDate = fDate.value.trim(); currentWork.region = fRegion.value.trim(); currentWork.type = fType.value.trim(); currentWork.doubanUrl = fDouban.value.trim(); currentWork.doubanNote = fNote.value.trim(); saveData(); renderLists(document.getElementById('search').value || ''); openWork(currentWork.id); }
+
+toggleVerify.addEventListener('click', ()=>{ verifyMode = !verifyMode; if(verifyMode){ verifyDrawer.classList.add('open'); toggleVerify.querySelector('.dot').style.background = 'var(--ok)'; if(currentWork) bindVerifyForm(currentWork); } else { verifyDrawer.classList.remove('open'); toggleVerify.querySelector('.dot').style.background = 'var(--tint)'; } });
+closeVerify.addEventListener('click', ()=>{ verifyMode = false; verifyDrawer.classList.remove('open'); toggleVerify.querySelector('.dot').style.background = 'var(--tint)'; });
+saveVerify.addEventListener('click', saveVerifyForm);
+window.addEventListener('keydown', (e)=>{ if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); saveVerifyForm(); } });
+
+// ========================= SEARCH / IMPORT / EXPORT =========================
+const search = document.getElementById('search');
+search.addEventListener('input', ()=> renderLists(search.value || ''));
+document.getElementById('scrollCats').addEventListener('click', ()=>{ document.getElementById('categories').scrollIntoView({behavior:'smooth'}); });
+
+const exportBtn = document.getElementById('exportBtn');
+exportBtn.addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = '黑洞AI_反诈影视库.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+const importFile = document.getElementById('importFile');
+importFile.addEventListener('change', (e)=>{
+  const file = e.target.files?.[0]; if(!file) return; const reader = new FileReader();
+  reader.onload = (ev)=>{ try{ const obj = JSON.parse(ev.target.result); if(Array.isArray(obj)){ DATA = obj; saveData(); renderCategories(); renderLists(search.value || ''); alert('导入成功！'); } else { alert('JSON 格式不正确（应为数组）'); } } catch(err){ alert('解析失败：'+err.message); } };
+  reader.readAsText(file, 'utf-8');
+});
+
+// ========================= INIT =========================
+function init(){ renderCategories(); renderLists(); if(location.hash.startsWith('#work-')){ const id = location.hash.replace('#work-',''); setTimeout(()=> openWork(id), 300); const card = document.getElementById('work-'+id); if(card) card.scrollIntoView({behavior:'smooth', block:'center'}); } }
+init();
+</script>
+</body>
+</html>
